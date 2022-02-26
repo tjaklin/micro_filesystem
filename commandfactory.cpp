@@ -7,8 +7,30 @@ namespace parser {
     {
     }
 
+    CommandFactory::~CommandFactory()
+    {
+
+        for (auto it = m_map.begin(); it != m_map.end(); it++)
+        {
+            // delete all Action* fom map.
+            delete it->second;
+        }
+        m_workingDirectory = nullptr;
+
+    }
+
     filesystem::Node* CommandFactory::executeCommand(Command* cmd)
     {
+        return executeCommand(std::make_shared<Command>(*cmd));
+    }
+
+    filesystem::Node* CommandFactory::executeCommand(std::shared_ptr<Command> cmd)
+    {
+        if (!cmd)
+        {
+            return m_workingDirectory;
+        }
+
         action::Action* a = findAction(cmd->action);
         if (a)
             m_workingDirectory= a->action(m_workingDirectory, cmd->argument);

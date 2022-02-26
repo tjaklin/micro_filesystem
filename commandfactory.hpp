@@ -4,6 +4,7 @@
 #include <map>
 #include "command.hpp"
 #include "action.hpp"
+#include <memory>
 
 namespace parser {
 
@@ -12,8 +13,10 @@ namespace parser {
 
     public:
         CommandFactory(filesystem::Node*);
+        ~CommandFactory();
 
         filesystem::Node* executeCommand(Command* cmd);
+        filesystem::Node* executeCommand(std::shared_ptr<Command> cmd);
         void registerAction(std::string key, action::Action* value);
 
     private:
